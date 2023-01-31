@@ -6,10 +6,18 @@ const fs = require("fs");
 const { mongoose } = require('mongoose')
 const db = mongoose.connection;
 const ObjectId = require('mongodb').ObjectId;
+const { factura } = require('../../utils/apiPedidos');
 
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
-    res.sendFile(process.cwd() + '/facturas/'+ id +'.pdf');
+    
+    try {
+        const resp = await factura.getFactura(id);
+        res.status(200);
+        res.send(resp);
+    } catch (error) {
+        
+    }
 });
 
 router.post('/', (req, res) => {
@@ -38,17 +46,15 @@ router.post('/', (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    
     try {
-
-        const { id } = req.params;
-        var newvalues2 = { $set: { PedEntrega: "Entregado"} };
-        db.collection("ColPedidos").updateOne({ _id: new ObjectId(id) }, newvalues2)
-
-        res.json("Se ha actualizado la entrega")
-
+        const resp = await factura.putFactura(id);
+        res.status(200);
+        res.json(resp);
     } catch (error) {
-        res.json("Error en la API: cambio de estado" + error);
+        resp.json("Error en la API: cambio de estado" + error);
     }
 });
 
