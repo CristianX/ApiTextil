@@ -3,10 +3,17 @@ const router = new Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' }).single("file");
 const fs = require("fs");
+const { adminImagen } = require('../../utils/apiProductos');
 
 router.get('/:img', async (req, res) => {
     const { img } = req.params;
-    res.sendFile(process.cwd() + '/imagenes/' + img);
+    try {
+        const resp = await adminImagen.getAdminImagen(img);
+        res.status(200);
+        res.send(resp);
+    } catch (error) {
+        res.json("Error en la API: /insertar imagen");
+    }
 });
 
 router.post('/', (req, res) => {

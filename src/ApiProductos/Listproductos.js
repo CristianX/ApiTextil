@@ -2,51 +2,20 @@ const { Router } = require('express');
 const router = new Router();
 const { mongoose } = require('mongoose')
 const db = mongoose.connection;
+const { listProductos } = require('../../utils/apiProductos');
 
 router.get('/:nombre/:tipo/:color/:modelo', async (req, res) => {
+    const { nombre } = req.params;
+    const { tipo } = req.params;
+    const { color } = req.params;
+    const { modelo } = req.params;
+    
     try {
-        const { nombre } = req.params;
-        const { tipo } = req.params;
-        const { color } = req.params;
-        const { modelo } = req.params;
-
-        var var_tipo = ""
-        var var_color = ""
-        var var_modelo = ""
-
-        if (tipo === "Todos") 
-            var_tipo = ""
-        else 
-            var_tipo = tipo
-        
-
-        if (color === "_ERROR_") {
-            var_color = ""
-        } else {
-            var_color = color
-        }
-
-        if (modelo === "_ERROR_") {
-            var_modelo = ""
-        } else {
-            var_modelo = modelo
-        }
-
-        if (nombre === "_ERROR_") {
-            const x = await db
-                .collection("ColProductos")
-                .find({ ProNombre: { $regex: "" }, ProTipo: { $regex: var_tipo }, ProColor: { $regex: var_color }, ProModelo: { $regex: var_modelo }, ProEstado: { $ne: 'No Disponible' } })
-                .toArray();
-            res.send(x);
-        } else {
-            const x = await db
-                .collection("ColProductos")
-                .find({ ProNombre: { $regex: nombre }, ProTipo: { $regex: var_tipo }, ProColor: { $regex: var_color }, ProModelo: { $regex: var_modelo }, ProEstado: { $ne: 'No Disponible' } })
-                .toArray();
-            res.send(x);
-        }
+        const resp = await listProductos.getListProductos(nombre, tipo, color, modelo);
+        res.status(200);
+        res.send(resp);
     } catch (error) {
-        res.json("Error en la API: /producto");
+        res.json("Error en la API: /listar productos");
     }
 
 
