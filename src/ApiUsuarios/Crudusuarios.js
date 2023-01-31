@@ -3,92 +3,50 @@ const router = new Router();
 const { mongoose } = require('mongoose')
 const db = mongoose.connection;
 const ObjectId = require('mongodb').ObjectId;
+const { crudUsuarios } = require('../../utils/apiUsuarios');
 
 router.get('/', async (req, res) => {
     try {
-        const x = await db
-            .collection("ColUsuarios")
-            .find({})
-            .toArray();
-        res.send(x);
+        const resp = await crudUsuarios.getAll();
+        res.status(200);
+        res.send(resp);
     } catch (error) {
-        res.json("Error en la API: /usuario");
+        es.json("Error en la API: /usuario");
     }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+    const body = {...req.body};
+
     try {
-        const { UsuNombre } = req.body;
-        const newUsuario = { ...req.body };
-
-        console.log(req.body)
-
-        db.collection('ColUsuarios').insertOne(newUsuario);
-        res.json(newUsuario);
-
+        const resp = await crudUsuarios.postUsuario(body);
+        res.status(201);
+        res.json(resp);
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     const { id } = req.params;
-    if (id) {
-        db.collection("ColUsuarios").deleteOne({ _id: new ObjectId(id) }, function (err, obj) {
-            if (err) throw err;
-            res.send("Se borro");
-        });
+    
+    try {
+        const resp = await crudUsuarios.deleteUsuario(id);
+        res.status(200);
+        res.send('Se borro');
+    } catch (error) {
+        res.json("Error en la API: /usuario");
     }
 });
-
-/*router.put('/:id', (req, res) => {
-    const { id } = req.params;
-    const { UsuNombre, UsuApellido, UsuDireccion, UsuTelefono, UsuEmail, UsuPassword, UsuRol } = req.body;
-    if (UsuNombre && UsuApellido && UsuDireccion && UsuTelefono && UsuEmail && UsuPassword && UsuRol) {
-        var newvalues = {
-            $set: {
-                UsuNombre: UsuNombre,
-                UsuApellido: UsuApellido,
-                UsuDireccion: UsuDireccion,
-                UsuTelefono: UsuTelefono,
-                UsuEmail: UsuEmail,
-                UsuPassword: UsuPassword,
-                UsuRol: UsuRol
-            }
-        };
-        var myquery = { _id: new ObjectId(id) };
-        db.collection("ColUsuarios").updateOne(myquery, newvalues, function (err, res) {
-            if (err) throw err;
-            console.log("se actualizó");
-        });
-        res.json("se actualizó");
-    } else {
-        res.status(500).json({ error: 'There was an error.' });
-    }
-});*/
-
 
 //ELIMINAR UN CAMPO
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const { id } = req.params;
-
-        var newvalues = {
-            $unset: {
-                PassNombre: "",
-                PassApellido: "",
-                PassDireccion: "",
-                PassTelefono: "",
-                PassEmail: "",
-                PassPassword: "",
-                PassRol: ""
-            }
-        };
-        var myquery = { _id: new ObjectId(id) };
-        db.collection("ColUsuarios").updateOne(myquery, newvalues, function (err, res) {
-
-        });
-        res.json("se borro un campo");
+        const resp = await crudUsuarios.putUsuario(id);
+        res.status(200);
+        res.send('se borro un campo');
     } catch (error) {
         res.json("Error en la API: /usuario");
     }

@@ -3,61 +3,28 @@ const router = new Router();
 const { mongoose } = require('mongoose')
 const db = mongoose.connection;
 const ObjectId = require('mongodb').ObjectId;
-const { encrypt, decrypt } = require('../ApiSeguridad/crypto')
+// const { encrypt, decrypt } = require('../ApiSeguridad/crypto')
+const {adminReclamos} = require('../../utils/apiUsuarios');
 
 router.get('/:nombre', async (req, res) => {
+    const { nombre } = req.params;
     try {
-        const { nombre } = req.params;
-
-        if (nombre === "_ERROR_") {
-            const x = await db
-                .collection("ColUsuarios")
-                .find({ UsuNombre: { $regex: "" }, CliReclamos: { $elemMatch: { RecRespuesta: 'Sin Respuesta' } } })
-                .toArray();
-
-                let reg = x.length
-
-                for (var i = 0; i < reg; i++) 
-                    x[i].UsuEmail = decrypt(x[i].UsuEmail)
-
-            res.send(x);
-        } else {
-            const x = await db
-                .collection("ColUsuarios")
-                .find({ UsuNombre: { $regex: nombre }, "CliReclamos.RecRespuesta": "Sin Respuesta" })
-                .toArray();
-
-                let reg = x.length
-
-                for (var i = 0; i < reg; i++) 
-                    x[i].UsuEmail = decrypt(x[i].UsuEmail)
-
-            res.send(x);
-        }
+        const resp = await adminReclamos.getByNombre(nombre);
+        res.status(200);
+        res.send(resp);
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
 });
 
 router.post('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { body } = req.body;
+
     try {
-        const { id } = req.params;
-        const { RecTitulo, RecFecha, RecRespuesta } = req.body;
-
-        console.log(RecTitulo, RecFecha, RecRespuesta)
-
-        const query = { _id: new ObjectId(id), "CliReclamos.RecTitulo": RecTitulo, "CliReclamos.RecFecha": RecFecha };
-
-        const newvalues = {
-            $set: { "CliReclamos.$.RecRespuesta": RecRespuesta }
-        };
-
-
-        db.collection("ColUsuarios").updateOne(query, newvalues, function (err, res) {
-
-        });
-        res.json("Reclamo actualizado");
-
+        const resp = await adminReclamos.postReclamoById(id, body);
+        res.status(201);
+        res.json('Reclamo Actualizado');
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
@@ -65,20 +32,13 @@ router.post('/:id', async (req, res) => {
 
 
 router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { body } = req.body;
+
     try {
-        const { id } = req.params;
-        const { RecTitulo, RecFecha, RecRespuesta } = req.body;
-
-        console.log(RecTitulo, RecFecha, RecRespuesta)
-
-
-        var newvalues = { $pull: { "CliReclamos": { "RecTitulo": RecTitulo } } };
-        const myquery = { _id: new ObjectId(id) };
-
-        db.collection("ColUsuarios").update(myquery, newvalues, function (err, res) {
-            if (err) throw err;
-        });
-        res.json("Se eliminó el reclamo")
+        const resp = await adminClientes.putBorrarReclamo(id, body);
+        res.status(200);
+        res.json('Se eliminó el reclamo');
     } catch (error) {
         res.json("Error en la API: /usuario");
     }

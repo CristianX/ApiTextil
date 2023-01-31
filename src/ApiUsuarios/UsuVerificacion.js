@@ -4,19 +4,16 @@ const { mongoose } = require('mongoose')
 const db = mongoose.connection;
 const ObjectId = require('mongodb').ObjectId;
 var nodemailer = require('nodemailer');
-const { encrypt, decrypt } = require('../ApiSeguridad/crypto')
+// const { encrypt, decrypt } = require('../ApiSeguridad/crypto')
+const { UsuVerificacion } = require('../../utils/apiUsuarios');
 
 router.get('/:correo', async (req, res) => {
     const { correo } = req.params;
 
-    correo_encrypt = encrypt(correo)
-
     try {
-        const x = await db
-            .collection("ColUsuarios")
-            .find({ UsuEmail: correo_encrypt })
-            .toArray();
-        res.send(x);
+        const resp = await UsuVerificacion.getUsuVerificacion(correo);
+        res.status(200);
+        res.send(resp);
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
@@ -25,39 +22,13 @@ router.get('/:correo', async (req, res) => {
 router.post('/:correo', async (req, res) => {
     const { correo } = req.params;
 
-    correo_encrypt = encrypt(correo)
-
-    var transporter = nodemailer.createTransport({
-        service: 'hotmail',
-        auth: {
-            user: 'daed_sa@hotmail.com',
-            pass: 'L4nnister'
-        }
-    });
-
-
-    const x = await db
-        .collection("ColUsuarios")
-        .find({ UsuEmail: correo_encrypt })
-        .toArray();
-
-    var pass =  decrypt(x[0].UsuPassword)
-
-    var mailOptions = {
-        from: 'daed_sa@hotmail.com',
-        to: correo,
-        subject: 'Recuperacion de contraseña DANITEX',
-        text: 'Esta es su contraseña: ' + pass
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-            res.json("La contraseña se ha enviado al correo registrado");
-        }
-    });
+    try {
+        const resp = await UsuVerificacion.postUsuVerificacion(correo);
+        res.status(200);
+        res.json('La contraseña se ha enviado al correo registrado');
+    } catch (error) {
+        res.json("Error en la API: /usuario");
+    }
 });
 
 module.exports = router;

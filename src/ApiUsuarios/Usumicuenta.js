@@ -3,86 +3,55 @@ const router = new Router();
 const { mongoose } = require('mongoose')
 const db = mongoose.connection;
 const ObjectId = require('mongodb').ObjectId;
-const { encrypt, decrypt } = require('../ApiSeguridad/crypto')
+// const { encrypt, decrypt } = require('../ApiSeguridad/crypto')
+const { Usumicuenta } = require('../../utils/apiUsuarios');
 
 router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const { id } = req.params;
-
-        const x = await db
-            .collection("ColUsuarios")
-            .find({ _id: new ObjectId(id) })
-            .toArray();
-
-        x[0].UsuPassword = decrypt(x[0].UsuPassword)
-        x[0].UsuEmail = decrypt(x[0].UsuEmail)
-
-        res.send(x);
+        const resp = await Usumicuenta.getUsumicuenta(id);
+        res.status(200);
+        res.send(resp);
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+
     try {
-        const { id } = req.params;
-        if (id) {
-            db.collection("ColUsuarios").deleteOne({ _id: new ObjectId(id) }, function (err, obj) {
-                if (err) throw err;
-                res.json("Se borro");
-            });
-        }
+        const resp = await Usumicuenta.deleteUsumicuenta(id);
+        res.status(200);
+        res.json('Se borro');
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { body } = req.body;
+
     try {
-        const { id } = req.params;
-        const { UsuNombre, UsuApellido, UsuDireccion, UsuTelefono, UsuCedula, UsuSocial} = req.body;
-
-
-            var newvalues = {
-                $set: {
-                    UsuNombre: UsuNombre,
-                    UsuApellido: UsuApellido,
-                    UsuDireccion: UsuDireccion,
-                    UsuTelefono: UsuTelefono,
-                    UsuCedula: UsuCedula,
-                    UsuSocial : UsuSocial,
-                }
-            };
-            var myquery = { _id: new ObjectId(id) };
-            db.collection("ColUsuarios").updateOne(myquery, newvalues, function (err, res) {
-                if (err) throw console.log(err);;
-                console.log("se actualizó");
-            });
-            res.json("Se Actualizó");
+        const resp = await Usumicuenta.putUsumicuenta(id, body);
+        res.status(200);
+        res.json('Se actualizó');
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
 });
 
 
-router.post('/:id', (req, res) => {
+router.post('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { body } = req.body;
+
     try {
-        const { id } = req.params;
-        const {  UsuPassword } = req.body;
-
-        var crypPass = encrypt(UsuPassword)
-
-            var newvalues = {
-                $set: {
-                    UsuPassword: crypPass
-                }
-            };
-            var myquery = { _id: new ObjectId(id) };
-            db.collection("ColUsuarios").updateOne(myquery, newvalues, function (err, res) {
-                if (err) throw console.log(err);;
-                console.log("se actualizó");
-            });
-            res.json("Se actualizó");
+        const resp = await Usumicuenta.postUsumicuenta(id, body);
+        res.status(200);
+        res.json('Se actualizó');
     } catch (error) {
         res.json("Error en la API: /usuario");
     }
