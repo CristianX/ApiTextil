@@ -10,7 +10,7 @@ router.get('/:img', async (req, res) => {
     try {
         const resp = await adminImagen.getAdminImagen(img);
         res.status(200);
-        res.send(resp);
+        res.sendFile(resp);
     } catch (error) {
         res.json("Error en la API: /insertar imagen");
     }

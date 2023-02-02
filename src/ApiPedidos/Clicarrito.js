@@ -24,7 +24,7 @@ router.get('/:id', async (req, res) => {
 router.post('/:cliente', async (req, res) => {
 
     const { cliente } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
     
     try {
         const resp = await cliCarrito.postCliCarrito(cliente, body);
@@ -50,7 +50,7 @@ router.put('/:cliente/:producto', async (req, res) => {
 
 
 router.delete('/', async (req, res) => {
-    const { body } = req.body;
+    const {body = {}} = req;
 try {
     const resp = await cliCarrito.deleteCliCarrito(body);
     res.status(200);

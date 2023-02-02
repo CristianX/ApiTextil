@@ -4,6 +4,8 @@ const app = express();
 var cors = require("cors");
 const database = require("../modulos/dbconect")
 
+// const bodyParser = require('body-parser')
+
 // settings
 app.set('port', process.env.PORT || 4000);
 
@@ -48,7 +50,6 @@ app.use('/apiadminclientes', require('./ApiUsuarios/AdminClientes'));
 app.use('/apiadminreclamos', require('./ApiUsuarios/AdminReclamos'));
 app.use('/apiconteo', require('./Admincontador'));
 app.use('/capuchino', require('./ApiProductos/Adminimagen'));
-
 
 // starting the serve
 app.listen(app.get('port'), () => {

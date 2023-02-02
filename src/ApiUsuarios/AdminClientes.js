@@ -19,7 +19,7 @@ router.get('/:nombre', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await adminClientes.postRespuestaById(id, body);
@@ -33,7 +33,7 @@ router.post('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await adminClientes.putBorrarReclamo(id, body);

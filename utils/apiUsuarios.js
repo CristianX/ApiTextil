@@ -1,6 +1,12 @@
 const axios = require('axios');
 const { response } = require('express');
 
+customConfig = {
+    headers: {
+    'Content-Type': 'application/json'
+    }
+};
+
 
 const adminClientes = {
     async getByNombre(nombre) {

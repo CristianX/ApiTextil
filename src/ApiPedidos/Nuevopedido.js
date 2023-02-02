@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 
 router.post('/:producto', async (req, res) => {
     const { producto } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
     
     try {
         const resp = await nuevoPedido.postNuevoPedido(producto, body);
@@ -33,7 +33,7 @@ router.post('/:producto', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await nuevoPedido.putNuevoPedido(id, body);

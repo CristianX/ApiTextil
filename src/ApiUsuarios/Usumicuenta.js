@@ -32,7 +32,7 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await Usumicuenta.putUsumicuenta(id, body);
@@ -46,7 +46,7 @@ router.put('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await Usumicuenta.postUsumicuenta(id, body);

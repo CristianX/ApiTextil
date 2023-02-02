@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const {body} = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await crudProductos.postCrudProductos(body);
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    const { id } = req.params;
+    const {body = {}} = req;
     
     try {
         const resp = await crudProductos.deleteCrudProductos(id);
@@ -44,7 +44,7 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const {body} = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await crudProductos.putCrudProductos(id, body);

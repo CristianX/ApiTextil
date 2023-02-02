@@ -22,9 +22,11 @@ router.get('/:correo/:pass/:rol', async (req, res) => {
 
 router.post('/', async (req, res) => {
 
-    const { body } = req.body;
-
+    
+    const {body = {}} = req;
+    
     try {
+        console.log('Registro de usuarios!!!', body);
         const resp = await registro.postRegistro(body);
         res.status(201);
         res.json('Se inserto con éxito');

@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 
 
 router.post('/', async (req, res) => {
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await crudPedidos.postCrudPedidos(body);
@@ -43,7 +43,7 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await crudPedidos.putCrudPedidos(id, body);

@@ -14,7 +14,7 @@ router.get('/:id', async (req, res) => {
     try {
         const resp = await factura.getFactura(id);
         res.status(200);
-        res.send(resp);
+        res.sendFile(resp);
     } catch (error) {
         
     }

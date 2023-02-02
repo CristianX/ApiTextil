@@ -19,7 +19,7 @@ router.get('/:cliente', async (req, res) => {
 
 router.post('/:cliente', async (req, res) => {
     const { cliente } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await UsuReclamos.postUsuReclamos(cliente, body);
@@ -34,7 +34,7 @@ router.post('/:cliente', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { body } = req.body;
+    const {body = {}} = req;
 
     try {
         const resp = await UsuReclamos.putUsuReclamos(id, body);
