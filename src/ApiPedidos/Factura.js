@@ -10,14 +10,7 @@ const { factura } = require('../../utils/apiPedidos');
 
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
-    
-    try {
-        const resp = await factura.getFactura(id);
-        res.status(200);
-        res.sendFile(resp);
-    } catch (error) {
-        
-    }
+    res.sendFile(process.cwd() + '/facturas/'+ id +'.pdf');
 });
 
 router.post('/', (req, res) => {

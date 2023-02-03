@@ -12,6 +12,16 @@ const adminImagen = {
         }
     },
 
+    async postAdminImagen(body, path) {
+        try {
+            return await axios.post(`http://localhost:3004/capuchino/`, body).then((response) => {
+                return response.data;
+            });
+        } catch (error) {
+            return error;
+        }
+    }
+
 
 };
 

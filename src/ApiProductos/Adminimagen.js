@@ -7,14 +7,10 @@ const { adminImagen } = require('../../utils/apiProductos');
 
 router.get('/:img', async (req, res) => {
     const { img } = req.params;
-    try {
-        const resp = await adminImagen.getAdminImagen(img);
-        res.status(200);
-        res.sendFile(resp);
-    } catch (error) {
-        res.json("Error en la API: /insertar imagen");
-    }
+    console.log(res);
+    res.sendFile(process.cwd() + '/imagenes/' + img);
 });
+
 
 router.post('/', (req, res) => {
     try {

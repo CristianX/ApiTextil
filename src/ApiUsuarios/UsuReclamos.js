@@ -23,7 +23,7 @@ router.post('/:cliente', async (req, res) => {
 
     try {
         const resp = await UsuReclamos.postUsuReclamos(cliente, body);
-        res.status(200);
+        res.status(201);
         res.json('Se agrego un reclamo');
     } catch (error) {
         res.json("Error en la API: /usuario");
