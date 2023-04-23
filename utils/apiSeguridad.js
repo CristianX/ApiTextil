@@ -30,6 +30,16 @@ const apiSeguridad = {
         } catch (error) {
             return error;
         }
+    },
+
+    async putNuevoPass( correo, pass ) {
+        try {
+            return await axios.put(`http://localhost:3001/apirecuperar/newpass/${correo}/${pass}`).then((response) => {
+                return response.data;
+            });
+        } catch (error) {
+            return error;
+        }
     }
 };
 

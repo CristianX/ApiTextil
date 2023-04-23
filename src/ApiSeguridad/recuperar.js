@@ -46,4 +46,18 @@ router.put('/:correo/:codigo', async (req, res) => {
 
 });
 
+router.put('/newpass/:correo/:pass', async (req, res) => {
+
+   const { correo, pass } = req.params;
+
+   try {
+      const resp = await apiSeguridad.putNuevoPass(correo, pass);
+      res.status(200);
+      res.json(resp);
+   } catch (error) {
+      res.json("Error en la API: /usuario");
+   }
+
+});
+
 module.exports = router;
