@@ -60,4 +60,16 @@ router.put('/newpass/:correo/:pass', async (req, res) => {
 
 });
 
+router.get('/codigo-recuperacion/:correo/:codigo', async (req, res) => {
+   const { correo, codigo } = req.params;
+
+   try {
+      const resp = await apiSeguridad.getCompararCodigo(correo, codigo);
+      res.status(200);
+      res.json(resp);
+   } catch (error) {
+      res.json("Error en la API: /usuario");
+   }
+});
+
 module.exports = router;

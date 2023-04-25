@@ -40,6 +40,16 @@ const apiSeguridad = {
         } catch (error) {
             return error;
         }
+    },
+
+    async getCompararCodigo(correo, codigo) {
+        try {
+            return await axios.get(`http://localhost:3001/apirecuperar/codigo-recuperacion/${ correo }/${ codigo }`).then((response) => {
+                return response.data;
+            });
+        } catch (error) {
+            return error;
+        }
     }
 };
 
